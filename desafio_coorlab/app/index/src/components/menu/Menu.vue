@@ -45,6 +45,10 @@ ul {
     align-items: center;
   }
 
+  p{
+    color: white;
+  }
+
   #calculator-menu {
     margin-left: -0.5rem;
   }

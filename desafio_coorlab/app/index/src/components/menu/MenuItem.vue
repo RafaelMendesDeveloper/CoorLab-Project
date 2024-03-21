@@ -1,7 +1,7 @@
 <template>
   <li id="calculator-menu">
     <a href="#">
-      <img src="@/assets/calculator.png" alt="calculator" id="calculator">
+      <img src="@/assets/calculator.png" alt="calculator" id="calculatorImage">
       <p>Calculadora de Viagem</p>
     </a>
   </li>
@@ -34,7 +34,7 @@ p {
   color: white;
   font-size: 0.8rem;
 }
-
+  
 img{
     max-height: 1rem;
     max-width: 1rem;

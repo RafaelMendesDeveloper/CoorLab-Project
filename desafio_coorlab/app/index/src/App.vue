@@ -1,15 +1,18 @@
 <template>
-  <Menu msg="Hello, World!"/>
+    <Menu/>
+    <CalculatorDiv/>
 </template>
 
 
 <script>
 import Menu from './components/menu/Menu.vue'
+import CalculatorDiv from './components/calculator/CalculatorDiv.vue'
 
 export default {
   name: 'App',
   components: {
-    Menu
+    Menu,
+    CalculatorDiv
   }
 }
 </script>
@@ -25,6 +28,5 @@ export default {
   height: 100%;
   font-family: 'Roboto', sans-serif;
 }
-
 
 </style>
