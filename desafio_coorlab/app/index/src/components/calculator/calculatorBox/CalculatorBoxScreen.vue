@@ -1,13 +1,14 @@
 <template>
   <div id='boxCalculator'>
-    <CalculatorBoxData :transportData="transportData" @submitForm="submitForm" @submitDate="submitDate"/>
-    <CalculatorBoxShow :selectedCity="selectedCity" :economyPrice="economyPrice"/>
+    <CalculatorBoxData :transportData="transportData" @form-submitted="updateData"/>
+    <CalculatorBoxShow :selectedCity="selectedCity" :economyPrice="economyPrice" :infos="infos"/>
   </div>
 </template>
 
 <script>
 import CalculatorBoxData from './CalculatorBoxData'
 import CalculatorBoxShow from './CalculatorBoxShow'
+import axios from 'axios';
 
 export default {
   name: 'CalculatorBoxScreen',
@@ -17,20 +18,33 @@ export default {
   },
   data() {
     return {
-      selectedCity: '',
-      economyPrice: '',
-      transportData: [],
+      selectedCity: '', 
+      economyPrice: '', 
+      infos: '',
+      transportData: [], 
     }
   },
   methods: {
-    submitForm(city, economyPrice) {
+    updateData(city, economyPrice, infos) {
       this.selectedCity = city;
       this.economyPrice = economyPrice;
+      this.infos = infos;
     },
-    submitDate(city, economyPrice) {
-      this.selectedCity = city;
-      this.economyPrice = economyPrice;
+    async fetchTransportData() {
+      try {
+        const response = await axios.get('http://localhost:5000/api/cities'); 
+        const cities = response.data;
+        for (const city of cities) {
+          const transportResponse = await axios.get(`http://localhost:5000/api/transport?city=${city}`);
+          this.transportData.push(...transportResponse.data);
+        }
+      } catch (error) {
+        console.error('Erro ao obter dados do servidor:', error);
+      }
     }
+  },
+  async mounted() {
+    await this.fetchTransportData();
   }
 }
 </script>

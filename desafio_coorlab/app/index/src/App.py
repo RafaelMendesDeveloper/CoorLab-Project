@@ -22,6 +22,10 @@ def get_transport_by_city():
         return jsonify([]), 404
     return jsonify(filtered_transport)
 
+@app.route('/')
+def index():
+    return 'Bem-vindo ao meu servidor Flask!'
+
 
 @app.route('/api/cities', methods=['GET'])
 def get_cities():

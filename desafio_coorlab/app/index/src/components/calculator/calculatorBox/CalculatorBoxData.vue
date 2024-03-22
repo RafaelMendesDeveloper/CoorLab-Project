@@ -16,6 +16,7 @@ import CityForm from "./calculatorBoxData/CityForm";
 import DateForm from "./calculatorBoxData/DateForm";
 import SearchButton from "./calculatorBoxData/SearchButton";
 import ModalScreen from "./calculatorBoxData/ModalScreen";
+import axios from 'axios';
 
 export default {
   name: "CalculatorBoxData",
@@ -41,25 +42,41 @@ export default {
       showDateForm: true,
       showModal: false,
       selectedCity: '',
-      economyPrice: ''
+      economyPrice: '',
+      infos: '',
+
+      localTransportData: [] 
     };
   },
 
   methods: {
-    submitForm() {
+    async submitForm() {
       if (!this.$refs.cityForm.selectedCity || !this.$refs.dateForm.selectedDate) {
         this.showModal = true;
       } else {
         this.selectedCity = this.$refs.cityForm.selectedCity;
-        this.economyPrice = this.getEconomyPrice(this.selectedCity);
+        try {
+          const response = await axios.get(`http://localhost:5000/api/transport?city=${this.selectedCity}`);
+          this.localTransportData = response.data;
+          this.economyPrice = this.getEconomyPrice(this.selectedCity);
+          this.infos = this.getAllInfos(this.selectedCity);
+          this.$emit('form-submitted', this.selectedCity, this.economyPrice, this.infos);
+        } catch (error) {
+          console.error('Erro ao obter dados do servidor:', error);
+        }
       }
     },
     closeModal() {
       this.showModal = false;
     },
     getEconomyPrice(city) {
-      const transport = this.transportData.find(t => t.city === city);
+      const transport = this.localTransportData.find(t => t.city === city);
       return transport ? transport.price_econ : "Não disponível";
+    },
+    getAllInfos(city){
+      let infos = this.localTransportData.find(Object => Object.city === city);
+      infos = JSON.stringify(infos);
+      return infos ? infos : "ERRO!";
     }
   },
 };
