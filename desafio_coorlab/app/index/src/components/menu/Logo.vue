@@ -1,6 +1,6 @@
 <template>
   <li>
-    <img src="@/assets/logo.png" alt="logo" id="logo">
+    <img src="../../assets/logo.png" alt="logo" id="logo">
   </li>
 </template>
 

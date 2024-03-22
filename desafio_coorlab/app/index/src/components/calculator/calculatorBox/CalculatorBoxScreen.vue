@@ -1,8 +1,8 @@
 <template>
-    <div id='boxCalculator'>
-        <CalculatorBoxData/>
-        <CalculatorBoxShow/>
-    </div>
+  <div id='boxCalculator'>
+    <CalculatorBoxData :transportData="transportData" @submitForm="submitForm" @submitDate="submitDate"/>
+    <CalculatorBoxShow :selectedCity="selectedCity" :economyPrice="economyPrice"/>
+  </div>
 </template>
 
 <script>
@@ -14,6 +14,23 @@ export default {
   components: {
     CalculatorBoxData,
     CalculatorBoxShow
+  },
+  data() {
+    return {
+      selectedCity: '',
+      economyPrice: '',
+      transportData: [],
+    }
+  },
+  methods: {
+    submitForm(city, economyPrice) {
+      this.selectedCity = city;
+      this.economyPrice = economyPrice;
+    },
+    submitDate(city, economyPrice) {
+      this.selectedCity = city;
+      this.economyPrice = economyPrice;
+    }
   }
 }
 </script>

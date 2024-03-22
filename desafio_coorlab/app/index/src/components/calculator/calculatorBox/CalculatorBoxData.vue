@@ -4,22 +4,8 @@
     <CityForm v-if="showCityForm" ref="cityForm" />
     <DateForm v-if="showDateForm" ref="dateForm" />
     <SearchButton @click="submitForm" />
-
-    <!-- Modal customizado -->
     <div v-if="showModal" class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <div class="modal-header">
-            <img src="@/assets/error.png" alt="error" id="error">
-          </div>
-          <div class="modal-body">
-            <p>Insira os valores para realizar a cotação.</p>
-          </div>
-          <div class="modal-footer">
-            <button class="modal-default-button" @click="showModal = false">OK</button>
-          </div>
-        </div>
-      </div>
+        <ModalScreen @close-modal="closeModal"/>
     </div>
   </div>
 </template>
@@ -29,6 +15,7 @@ import CalculatorBoxDataText from "./calculatorBoxData/Text";
 import CityForm from "./calculatorBoxData/CityForm";
 import DateForm from "./calculatorBoxData/DateForm";
 import SearchButton from "./calculatorBoxData/SearchButton";
+import ModalScreen from "./calculatorBoxData/ModalScreen";
 
 export default {
   name: "CalculatorBoxData",
@@ -38,6 +25,14 @@ export default {
     CityForm,
     DateForm,
     SearchButton,
+    ModalScreen,
+  },
+
+  props: {
+    transportData: {
+      type: Array,
+      required: true
+    }
   },
 
   data() {
@@ -45,6 +40,8 @@ export default {
       showCityForm: true,
       showDateForm: true,
       showModal: false,
+      selectedCity: '',
+      economyPrice: ''
     };
   },
 
@@ -53,11 +50,17 @@ export default {
       if (!this.$refs.cityForm.selectedCity || !this.$refs.dateForm.selectedDate) {
         this.showModal = true;
       } else {
-        // Se os formulários estiverem preenchidos, prosseguir com o envio dos dados
-        console.log("Cidade selecionada:", this.$refs.cityForm.selectedCity);
-        console.log("Data selecionada:", this.$refs.dateForm.selectedDate);
+        this.selectedCity = this.$refs.cityForm.selectedCity;
+        this.economyPrice = this.getEconomyPrice(this.selectedCity);
       }
     },
+    closeModal() {
+      this.showModal = false;
+    },
+    getEconomyPrice(city) {
+      const transport = this.transportData.find(t => t.city === city);
+      return transport ? transport.price_econ : "Não disponível";
+    }
   },
 };
 </script>
@@ -86,49 +89,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.modal-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-container {
-  width: 300px;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-}
-
-.modal-header{
-  display: flex;
-  justify-content: center;
-}
-
-.modal-header img{
-    height: 2rem;
-    width: 2rem;
-}
-
-.modal-body {
-  margin: 20px 0;
-}
-
-.modal-default-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #04a8b3;
-  border: none;
-  border-radius: 5px;
-  color: #fff;
-  cursor: pointer;
-}
-
-.modal-default-button:hover {
-  background-color: #03848c;
 }
 </style>
